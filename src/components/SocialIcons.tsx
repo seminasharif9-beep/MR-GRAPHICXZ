@@ -1,8 +1,8 @@
 import {
-  FaGithub,
+  FaBehance,
   FaInstagram,
   FaLinkedinIn,
-  FaXTwitter,
+  FaPinterestP,
 } from "react-icons/fa6";
 import "./styles/SocialIcons.css";
 import { TbNotes } from "react-icons/tb";
@@ -60,8 +60,8 @@ const SocialIcons = () => {
     <div className="icons-section">
       <div className="social-icons" data-cursor="icons" id="social">
         <span>
-          <a href="https://github.com" target="_blank">
-            <FaGithub />
+          <a href="https://www.pinterest.com" target="_blank" rel="noreferrer" aria-label="Pinterest">
+            <FaPinterestP />
           </a>
         </span>
         <span>
@@ -70,8 +70,8 @@ const SocialIcons = () => {
           </a>
         </span>
         <span>
-          <a href="https://x.com" target="_blank">
-            <FaXTwitter />
+          <a href="https://www.behance.net" target="_blank" rel="noreferrer" aria-label="Behance">
+            <FaBehance />
           </a>
         </span>
         <span>

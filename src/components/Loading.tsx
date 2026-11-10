@@ -1,37 +1,80 @@
 import { useEffect, useState } from "react";
 import "./styles/Loading.css";
 import { useLoading } from "../context/LoadingProvider";
-
 import Marquee from "react-fast-marquee";
 
 const Loading = ({ percent }: { percent: number }) => {
   const { setIsLoading } = useLoading();
+  const [localPercent, setLocalPercent] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
 
-  if (percent >= 100) {
-    setTimeout(() => {
-      setLoaded(true);
-      setTimeout(() => {
-        setIsLoaded(true);
-      }, 1000);
-    }, 600);
-  }
+  const currentPercent = Math.max(percent, localPercent);
 
+  // Automatically progress from 0% to 100% smoothly
   useEffect(() => {
-    import("./utils/initialFX").then((module) => {
-      if (isLoaded) {
+    const interval = setInterval(() => {
+      setLocalPercent((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return Math.min(100, prev + 4);
+      });
+    }, 40);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Trigger completion states once 100% is reached
+  useEffect(() => {
+    if (currentPercent >= 100) {
+      const timer1 = setTimeout(() => {
+        setLoaded(true);
+        const timer2 = setTimeout(() => {
+          setIsLoaded(true);
+        }, 800);
+        return () => clearTimeout(timer2);
+      }, 400);
+      return () => clearTimeout(timer1);
+    }
+  }, [currentPercent]);
+
+  // Run intro animations and hide loading screen
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    import("./utils/initialFX")
+      .then((module) => {
         setClicked(true);
         setTimeout(() => {
-          if (module.initialFX) {
-            module.initialFX();
+          try {
+            if (module.initialFX) {
+              module.initialFX();
+            }
+          } catch (err) {
+            console.warn("initialFX warning:", err);
           }
           setIsLoading(false);
+
+          // Initialize page scroll animations safely
+          import("./utils/GsapScroll")
+            .then((gsapModule) => {
+              if (gsapModule.setAllTimeline) {
+                gsapModule.setAllTimeline();
+              }
+            })
+            .catch(() => {});
         }, 900);
-      }
-    });
-  }, [isLoaded]);
+      })
+      .catch(() => {
+        setClicked(true);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 900);
+      });
+  }, [isLoaded, setIsLoading]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
     const { currentTarget: target } = e;
@@ -46,7 +89,7 @@ const Loading = ({ percent }: { percent: number }) => {
     <>
       <div className="loading-header">
         <a href="/#" className="loader-title" data-cursor="disable">
-          Logo
+          MR GRAPHICXZ
         </a>
         <div className={`loaderGame ${clicked && "loader-out"}`}>
           <div className="loaderGame-container">
@@ -62,8 +105,10 @@ const Loading = ({ percent }: { percent: number }) => {
       <div className="loading-screen">
         <div className="loading-marquee">
           <Marquee>
-            <span> A Creative Developer</span> <span>A Creative Designer</span>
-            <span> A Creative Developer</span> <span>A Creative Designer</span>
+            <span>A Creative Graphic Designer</span>
+            <span>A Creative Graphic Designer</span>
+            <span>A Creative Graphic Designer</span>
+            <span>A Creative Graphic Designer</span>
           </Marquee>
         </div>
         <div
@@ -75,7 +120,7 @@ const Loading = ({ percent }: { percent: number }) => {
             <div className="loading-container">
               <div className="loading-content">
                 <div className="loading-content-in">
-                  Loading <span>{percent}%</span>
+                  Loading <span>{currentPercent}%</span>
                 </div>
               </div>
               <div className="loading-box"></div>

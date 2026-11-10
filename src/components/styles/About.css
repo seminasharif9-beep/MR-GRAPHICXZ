@@ -24,9 +24,9 @@
 }
 
 .about-me p {
-  font-size: 33px;
+  font-size: clamp(18px, 2.1vw, 33px);
   font-weight: 600;
-  line-height: 36px;
+  line-height: 1.4;
   letter-spacing: 1px;
 }
 
@@ -59,8 +59,8 @@
     width: 50%;
   }
   .about-me p {
-    font-size: 1.9vw;
-    line-height: 2.3vw;
+    font-size: clamp(20px, 1.9vw, 37px);
+    line-height: 1.35;
   }
 }
 @media only screen and (min-width: 1950px) {

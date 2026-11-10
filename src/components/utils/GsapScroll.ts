@@ -136,56 +136,34 @@ export function setAllTimeline() {
   const careerTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: ".career-section",
-      start: "top 30%",
-      end: "100% center",
-      scrub: true,
-      invalidateOnRefresh: true,
+      start: "top 72%",
+      toggleActions: "play none none reverse",
     },
   });
-  careerTimeline
-    .fromTo(
-      ".career-timeline",
-      { maxHeight: "10%" },
-      { maxHeight: "100%", duration: 0.5 },
-      0
-    )
+  careerTimeline.fromTo(
+    ".career-container > h2",
+    { autoAlpha: 0, y: 30, filter: "blur(6px)" },
+    {
+      autoAlpha: 1,
+      y: 0,
+      filter: "blur(0px)",
+      duration: 0.7,
+      ease: "power3.out",
+    },
+    0
+  );
+  careerTimeline.fromTo(
+    ".career-info-box",
+    { autoAlpha: 0, x: -55, y: 16 },
+    {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      stagger: 0.2,
+      duration: 0.75,
+      ease: "power3.out",
+    },
+    0.2
+  );
 
-    .fromTo(
-      ".career-timeline",
-      { opacity: 0 },
-      { opacity: 1, duration: 0.1 },
-      0
-    )
-    .fromTo(
-      ".career-info-box",
-      { opacity: 0 },
-      { opacity: 1, stagger: 0.1, duration: 0.5 },
-      0
-    )
-    .fromTo(
-      ".career-dot",
-      { animationIterationCount: "infinite" },
-      {
-        animationIterationCount: "1",
-        delay: 0.3,
-        duration: 0.1,
-      },
-      0
-    );
-
-  if (window.innerWidth > 1024) {
-    careerTimeline.fromTo(
-      ".career-section",
-      { y: 0 },
-      { y: "20%", duration: 0.5, delay: 0.2 },
-      0
-    );
-  } else {
-    careerTimeline.fromTo(
-      ".career-section",
-      { y: 0 },
-      { y: 0, duration: 0.5, delay: 0.2 },
-      0
-    );
-  }
 }
